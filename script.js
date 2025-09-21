@@ -25,6 +25,13 @@ textArea.addEventListener('keydown', (e) => {
     }
 });
 
+// Remove spans when user starts typing again
+textArea.addEventListener('input', (e) => {
+    if (!isRandomizing && e.target.value.length > 0) {
+        removeSpan();
+    }
+});
+
 // Create span elements from input text
 function addTag(input) {
     // Split input by commas
@@ -47,7 +54,11 @@ function addTag(input) {
     if (length > 1) {
     random(length, spans);
     } else if (length === 1) {
+    isRandomizing = true;
     spans[0].classList.add('active');
+     setTimeout(() => {
+            isRandomizing = false;
+        }, 1000);
     }
     reset();
 }
@@ -85,11 +96,15 @@ function random(length, spans){
                 const randNum = Math.floor(Math.random() * currentSpans.length);
                 const randSpan = currentSpans[randNum];
                 console.log('Selected span:', randSpan.textContent);
-                randSpan.classList.add('active');
+                if (randSpan && randSpan.classList) {
+                    randSpan.classList.add('active');
+                } else {
+                    console.log('Error: randSpan is null or undefined');
+                }
             }
             
             isRandomizing = false;
-        }, 200);
+        }, 500);
         
     }, 3000);
 }
